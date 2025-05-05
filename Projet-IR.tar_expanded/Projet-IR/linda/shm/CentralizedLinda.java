@@ -1,6 +1,8 @@
 package linda.shm;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import linda.Callback;
 import linda.Linda;
@@ -9,36 +11,45 @@ import linda.Tuple;
 /** Shared memory implementation of Linda. */
 public class CentralizedLinda implements Linda {
 	
+	private ArrayList<Tuple> tuplesList;
+	
     public CentralizedLinda() {
+    	this.tuplesList = new ArrayList<Tuple>();
     }
 
 	@Override
 	public void write(Tuple t) {
-		// TODO Auto-generated method stub
-		
+		this.tuplesList.add(t.deepclone());
 	}
 
 	@Override
 	public Tuple take(Tuple template) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Tuple read(Tuple template) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Tuple tryTake(Tuple template) {
-		// TODO Auto-generated method stub
-		return null;
+		int index = -1;
+		for(int i = 0; i < this.tuplesList.size(); i++) {
+			if(this.tuplesList.get(i).matches(template)) {
+				index = i;
+				break;
+			}
+		}
+		return index != - 1 ? this.tuplesList.remove(index) : null;
 	}
 
 	@Override
 	public Tuple tryRead(Tuple template) {
-		// TODO Auto-generated method stub
+		for(Tuple t : this.tuplesList) {
+			if(t.matches(template)) 
+				return t.deepclone();
+		}
 		return null;
 	}
 
