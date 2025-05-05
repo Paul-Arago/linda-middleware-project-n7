@@ -48,7 +48,6 @@ public class BasicTest1 {
                 linda.write(t3);
                                 
                 linda.debug("(2)");
-
             }
         }.start();
                 
