@@ -61,7 +61,8 @@ public class CentralizedLinda implements Linda {
 			}
 		}
 	}
-	
+
+	@Override
 	public Tuple read(Tuple template) {
 		try {
 			Tuple result;
@@ -87,26 +88,6 @@ public class CentralizedLinda implements Linda {
 		}
 	}
 
-	/*
-	@Override
-	public Tuple read(Tuple template) {
-		Tuple foundTuple = this.tryRead(template);
-		if(foundTuple == null) {
-			this.eventRegister(eventMode.READ, null, template, this::readImpl);
-			while(true) {
-				try {
-		            Thread.sleep(1);
-		        } catch (InterruptedException e) {
-		            e.printStackTrace();
-		        }
-				this.readImpl(template);
-			}
-		} else {
-			return foundTuple;
-		}
-	}
-	*/
-
 	@Override
 	public synchronized Tuple tryTake(Tuple template) {
 		int index = -1;
@@ -129,15 +110,25 @@ public class CentralizedLinda implements Linda {
 	}
 
 	@Override
-	public Collection<Tuple> takeAll(Tuple template) {
-		// TODO Auto-generated method stub
-		return null;
+	public synchronized Collection<Tuple> takeAll(Tuple template) {
+		Collection<Tuple> result = new ArrayList<>();
+		for(Tuple t : this.tupleSpace) {
+			if(t.matches(template)) {
+				result.add(tryTake(template));
+			}
+		}
+		return result;
 	}
 
 	@Override
-	public Collection<Tuple> readAll(Tuple template) {
-		// TODO Auto-generated method stub
-		return null;
+	public synchronized Collection<Tuple> readAll(Tuple template) {
+		Collection<Tuple> result = new ArrayList<>();
+		for(Tuple t : this.tupleSpace) {
+			if(t.matches(template)) {
+				result.add(t.deepclone());
+			}
+		}
+		return result;
 	}
 
 	@Override
