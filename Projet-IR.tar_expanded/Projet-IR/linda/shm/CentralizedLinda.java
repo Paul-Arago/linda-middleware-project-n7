@@ -75,8 +75,9 @@ public class CentralizedLinda implements Linda {
 					waitingThreads.put(Thread.currentThread(), template);
 				}
 
-				wait();
-
+				synchronized (Thread.currentThread()) {
+					Thread.currentThread().wait();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
