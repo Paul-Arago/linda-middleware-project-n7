@@ -36,18 +36,25 @@ public class CentralizedLinda implements Linda {
 	public Tuple take(Tuple template) {
 		try {
 			while (true) {
-				Tuple result = tryTake(template);
-				if (result != null) {
-					return result;
+				Tuple result;
+				synchronized (this) {
+					result = tryTake(template);
+					if (result != null) {
+						return result;
+					}
+					waitingThreads.put(Thread.currentThread(), template);
 				}
-				waitingThreads.put(Thread.currentThread(), template);
+
 				wait();
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		} finally {
-			waitingThreads.remove(Thread.currentThread());
+			synchronized (this) {
+				waitingThreads.remove(Thread.currentThread());
+			}
 		}
 	}
 	
@@ -91,7 +98,7 @@ public class CentralizedLinda implements Linda {
 	*/
 
 	@Override
-	public Tuple tryTake(Tuple template) {
+	public synchronized Tuple tryTake(Tuple template) {
 		int index = -1;
 		for(int i = 0; i < this.tupleSpace.size(); i++) {
 			if(this.tupleSpace.get(i).matches(template)) {
@@ -99,13 +106,11 @@ public class CentralizedLinda implements Linda {
 				break;
 			}
 		}
-		synchronized(this.tupleSpace) {
-			return index != - 1 ? this.tupleSpace.remove(index) : null;
-		}
+        return index != - 1 ? this.tupleSpace.remove(index) : null;
 	}
 
 	@Override
-	public Tuple tryRead(Tuple template) {
+	public synchronized Tuple tryRead(Tuple template) {
 		for(Tuple t : this.tupleSpace) {
 			if(t.matches(template)) 
 				return t.deepclone();
