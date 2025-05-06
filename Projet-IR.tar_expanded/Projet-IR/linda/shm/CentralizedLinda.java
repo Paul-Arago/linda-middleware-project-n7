@@ -3,6 +3,7 @@ package linda.shm;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import linda.Callback;
 import linda.Linda;
@@ -12,27 +13,42 @@ import linda.Tuple;
 public class CentralizedLinda implements Linda {
 	
 	private ArrayList<Tuple> tupleSpace;
-	private HashMap<Tuple, Boolean> runningTakeTemplate;
-	
+	private final Map<Thread, Tuple> waitingThreads;
+
     public CentralizedLinda() {
     	this.tupleSpace = new ArrayList<Tuple>();
-    	this.runningTakeTemplate = new HashMap<>();
+		this.waitingThreads = new HashMap<>();
     }
 
 	@Override
 	public void write(Tuple t) {
 		this.tupleSpace.add(t.deepclone());
-		//FAIRE QUELQUE CHOSE ICI POUR LE TAKE AVEC LE DICO
+		for (Map.Entry<Thread, Tuple> entry : waitingThreads.entrySet()) {
+			if (t.matches(entry.getValue())) {
+				waitingThreads.remove(entry.getKey());
+				entry.getKey().notify();
+				break;
+			}
+		}
 	}
 
 	@Override
 	public Tuple take(Tuple template) {
-		return null;
-		// tryTake
-		// SI null 
-		//    -> this.liste.add(template)
-		//    -> WHILE true
-			  
+		try {
+			while (true) {
+				Tuple result = tryTake(template);
+				if (result != null) {
+					return result;
+				}
+				waitingThreads.put(Thread.currentThread(), template);
+				wait();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			waitingThreads.remove(Thread.currentThread());
+		}
 	}
 	
 	public Tuple read(Tuple template) {
