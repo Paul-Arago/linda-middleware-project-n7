@@ -3,8 +3,6 @@ package linda.shm;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import linda.Callback;
 import linda.Linda;
@@ -13,17 +11,17 @@ import linda.Tuple;
 /** Shared memory implementation of Linda. */
 public class CentralizedLinda implements Linda {
 	
-	private ArrayList<Tuple> tuplesList;
+	private ArrayList<Tuple> tupleSpace;
 	private HashMap<Tuple, Boolean> runningTakeTemplate;
 	
     public CentralizedLinda() {
-    	this.tuplesList = new ArrayList<Tuple>();
+    	this.tupleSpace = new ArrayList<Tuple>();
     	this.runningTakeTemplate = new HashMap<>();
     }
 
 	@Override
 	public void write(Tuple t) {
-		this.tuplesList.add(t.deepclone());
+		this.tupleSpace.add(t.deepclone());
 		//FAIRE QUELQUE CHOSE ICI POUR LE TAKE AVEC LE DICO
 	}
 
@@ -79,20 +77,20 @@ public class CentralizedLinda implements Linda {
 	@Override
 	public Tuple tryTake(Tuple template) {
 		int index = -1;
-		for(int i = 0; i < this.tuplesList.size(); i++) {
-			if(this.tuplesList.get(i).matches(template)) {
+		for(int i = 0; i < this.tupleSpace.size(); i++) {
+			if(this.tupleSpace.get(i).matches(template)) {
 				index = i;
 				break;
 			}
 		}
-		synchronized(this.tuplesList) {
-			return index != - 1 ? this.tuplesList.remove(index) : null;
+		synchronized(this.tupleSpace) {
+			return index != - 1 ? this.tupleSpace.remove(index) : null;
 		}
 	}
 
 	@Override
 	public Tuple tryRead(Tuple template) {
-		for(Tuple t : this.tuplesList) {
+		for(Tuple t : this.tupleSpace) {
 			if(t.matches(template)) 
 				return t.deepclone();
 		}
