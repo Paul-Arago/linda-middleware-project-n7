@@ -23,13 +23,14 @@ public class CentralizedLinda implements Linda {
 	@Override
 	public synchronized void write(Tuple t) {
 		this.tupleSpace.add(t.deepclone());
-		for (Map.Entry<Thread, Tuple> entry : waitingThreads.entrySet()) {
+		var iterator = waitingThreads.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<Thread, Tuple> entry = iterator.next();
 			if (t.matches(entry.getValue())) {
-				waitingThreads.remove(entry.getKey());
+				iterator.remove(); // Safely remove the entry
 				synchronized (entry.getKey()) {
 					entry.getKey().notify();
 				}
-				break;
 			}
 		}
 	}
@@ -145,6 +146,7 @@ public class CentralizedLinda implements Linda {
 		for (Tuple t : this.tupleSpace) {
 			System.out.println(t.toString());
 		}
+	 		System.out.println(" --------------------------");
 	}
     // TO BE COMPLETED
 }
