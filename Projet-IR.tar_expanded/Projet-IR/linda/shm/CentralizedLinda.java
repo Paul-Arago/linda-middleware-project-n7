@@ -35,8 +35,8 @@ public class CentralizedLinda implements Linda {
 	@Override
 	public Tuple take(Tuple template) {
 		try {
+			Tuple result;
 			while (true) {
-				Tuple result;
 				synchronized (this) {
 					result = tryTake(template);
 					if (result != null) {
@@ -59,25 +59,31 @@ public class CentralizedLinda implements Linda {
 	}
 	
 	public Tuple read(Tuple template) {
-		while(true) {
-			try {
-				Thread.sleep(1);
-		    } catch (InterruptedException e) {
-		        e.printStackTrace();
-		    }
-			this.readImpl(template);
-		}
+		try {
+			Tuple result;
+			while (true) {
+				synchronized (this) {
+					result = this.tryRead(template);
+					if (result != null) {
+						return result;
+					}
+					waitingThreads.put(Thread.currentThread(), template);
+				}
 
+				wait();
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			synchronized (this) {
+				waitingThreads.remove(Thread.currentThread());
+			}
+		}
 	}
 
-	/*private Tuple readImpl(Tuple template) {
-		for(Tuple t : this.tuplesList) {
-			if(t.matches(template)) 
-				return t.deepclone();
-		}
-		return null;
-	}
-	
+	/*
 	@Override
 	public Tuple read(Tuple template) {
 		Tuple foundTuple = this.tryRead(template);
