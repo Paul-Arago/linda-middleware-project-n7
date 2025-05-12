@@ -114,11 +114,12 @@ public class CentralizedLinda implements Linda {
 	@Override
 	public synchronized Collection<Tuple> takeAll(Tuple template) {
 		Collection<Tuple> result = new ArrayList<>();
-		for(Tuple t : this.tupleSpace) {
-			if(t.matches(template)) {
-				result.add(tryTake(template));
+		for (Tuple t : this.tupleSpace) {
+			if (t.matches(template)) {
+				result.add(t);
 			}
 		}
+		this.tupleSpace.removeAll(result);
 		return result;
 	}
 
@@ -141,7 +142,6 @@ public class CentralizedLinda implements Linda {
 
 	@Override
 	public synchronized void debug(String prefix) {
-		// TODO Auto-generated method stub
 		System.out.println(" ------------ " + prefix + " ---------");
 		for (Tuple t : this.tupleSpace) {
 			System.out.println(t.toString());
