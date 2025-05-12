@@ -32,7 +32,7 @@ public class BasicTestAsyncCallback {
         System.out.println("(2) write: " + t2);
         linda.write(t2);
         linda.debug("(2)");
-
+        
         Tuple t3 = new Tuple(4, "foo");
         System.out.println("(2) write: " + t3);
         linda.write(t3);
