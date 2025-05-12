@@ -41,6 +41,11 @@ public class BasicTestCallback {
         Tuple t3 = new Tuple(4, "foo");
         System.out.println("(2) write: " + t3);
         linda.write(t3);
+        
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
 
         linda.debug("(2)");
 

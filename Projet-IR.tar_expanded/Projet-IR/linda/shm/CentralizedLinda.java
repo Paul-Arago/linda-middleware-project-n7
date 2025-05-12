@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import linda.Callback;
+import linda.Event;
 import linda.Linda;
 import linda.Tuple;
 
@@ -14,15 +15,23 @@ public class CentralizedLinda implements Linda {
 	
 	private ArrayList<Tuple> tupleSpace;
 	private final Map<Thread, Tuple> waitingThreads;
+	private ArrayList<Event> registeredEvents;
 
     public CentralizedLinda() {
     	this.tupleSpace = new ArrayList<Tuple>();
 		this.waitingThreads = new HashMap<>();
+		this.registeredEvents = new ArrayList<>();
     }
 
 	@Override
 	public synchronized void write(Tuple t) {
 		this.tupleSpace.add(t.deepclone());
+		
+		for(int i = 0; i < this.registeredEvents.size(); i++) {
+			Event event = this.registeredEvents.get(i);
+			this.triggerCallback(event.getTemplate(), event.getMode(), event.getCallback(), i);
+		}
+		
 		var iterator = waitingThreads.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<Thread, Tuple> entry = iterator.next();
@@ -133,11 +142,27 @@ public class CentralizedLinda implements Linda {
 		}
 		return result;
 	}
+	
+	private void triggerCallback(Tuple template, eventMode mode, Callback callback, int index) {
+		Tuple tuple;
+		if(mode == eventMode.READ) {
+			tuple = this.tryRead(template);
+		} else {
+			tuple = this.tryTake(template);		
+		}
+		if(tuple != null) {
+			callback.call(tuple);
+			this.registeredEvents.remove(index);
+		}
+	}
 
 	@Override
 	public void eventRegister(eventMode mode, eventTiming timing, Tuple template, Callback callback) {
-		// TODO Auto-generated method stub
-		
+		Event event = new Event(mode, timing, template, callback);
+		this.registeredEvents.add(event);
+		if(timing == eventTiming.IMMEDIATE) {
+			this.triggerCallback(template, mode, callback, this.registeredEvents.size() - 1);
+		}
 	}
 
 	@Override
@@ -148,5 +173,4 @@ public class CentralizedLinda implements Linda {
 		}
 	 		System.out.println(" --------------------------");
 	}
-    // TO BE COMPLETED
 }
