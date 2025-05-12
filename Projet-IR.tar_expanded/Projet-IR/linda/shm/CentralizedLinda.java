@@ -113,13 +113,16 @@ public class CentralizedLinda implements Linda {
 
 	@Override
 	public synchronized Collection<Tuple> takeAll(Tuple template) {
-		Collection<Tuple> result = new ArrayList<>();
-		for(Tuple t : this.tupleSpace) {
-			if(t.matches(template)) {
-				result.add(tryTake(template));
-			}
-		}
-		return result;
+	    Collection<Tuple> result = new ArrayList<>();
+
+	    for (Tuple t : this.tupleSpace) {
+	        if (t.matches(template)) {
+	            result.add(t);
+	        }
+	    }
+
+	    this.tupleSpace.removeAll(result);
+	    return result;
 	}
 
 	@Override
