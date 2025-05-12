@@ -1,19 +1,18 @@
-
 package linda.test;
 
-import linda.*;
+import linda.Callback;
+import linda.Linda;
+import linda.Tuple;
 import linda.Linda.eventMode;
 import linda.Linda.eventTiming;
 
-public class BasicTestCallback {
-
-    private static Linda linda;
+public class BasicTestCallbackReadFuture {
+	private static Linda linda;
     private static Tuple cbmotif;
     
     private static class MyCallback implements Callback {
         public void call(Tuple t) {
             System.out.println("CB got "+t);
-            linda.eventRegister(eventMode.TAKE, eventTiming.IMMEDIATE, cbmotif, this);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -25,9 +24,13 @@ public class BasicTestCallback {
     public static void main(String[] a) {
         linda = new linda.shm.CentralizedLinda();
         // linda = new linda.server.LindaClient("//localhost:4000/MonServeur");
+        
+        Tuple t4 = new Tuple(5, "bar");
+        System.out.println("(2) write: " + t4);
+        linda.write(t4);
 
         cbmotif = new Tuple(Integer.class, String.class);
-        linda.eventRegister(eventMode.TAKE, eventTiming.IMMEDIATE, cbmotif, new MyCallback());
+        linda.eventRegister(eventMode.READ, eventTiming.FUTURE, cbmotif, new MyCallback());
 
         Tuple t1 = new Tuple(4, 5);
         System.out.println("(2) write: " + t1);
@@ -50,5 +53,4 @@ public class BasicTestCallback {
         linda.debug("(2)");
 
     }
-
 }
