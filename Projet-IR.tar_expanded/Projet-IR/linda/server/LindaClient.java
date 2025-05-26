@@ -1,5 +1,7 @@
 package linda.server;
 
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Collection;
 
 import linda.Callback;
@@ -11,67 +13,94 @@ import linda.Tuple;
  * */
 public class LindaClient implements Linda {
 	
-    /** Initializes the Linda implementation.
-     *  @param serverURI the URI of the server, e.g. "rmi://localhost:4000/LindaServer" or "//localhost:4000/LindaServer".
-     */
+    private RemoteLinda server;
+
     public LindaClient(String serverURI) {
-        // TO BE COMPLETED
+        try {
+            // Extraction du nom (ex: "//localhost:4000/LindaServer")
+            String[] parts = serverURI.replace("//", "").split("[:/]");
+            String host = parts[0];
+            int port = Integer.parseInt(parts[1]);
+            String name = parts[2];
+            Registry registry = LocateRegistry.getRegistry(host, port);
+            this.server = (RemoteLinda) registry.lookup(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-	@Override
-	public void write(Tuple t) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void write(Tuple t) {
+        try {
+            server.write(t);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public Tuple take(Tuple template) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Tuple take(Tuple template) {
+        try {
+            return server.take(template);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	@Override
-	public Tuple read(Tuple template) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Tuple read(Tuple template) {
+        try {
+            return server.read(template);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	@Override
-	public Tuple tryTake(Tuple template) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Tuple tryTake(Tuple template) {
+        try {
+            return server.tryTake(template);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	@Override
-	public Tuple tryRead(Tuple template) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Tuple tryRead(Tuple template) {
+        try {
+            return server.tryRead(template);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	@Override
-	public Collection<Tuple> takeAll(Tuple template) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Collection<Tuple> takeAll(Tuple template) {
+        try {
+            return server.takeAll(template);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	@Override
-	public Collection<Tuple> readAll(Tuple template) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Collection<Tuple> readAll(Tuple template) {
+        try {
+            return server.readAll(template);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	@Override
-	public void eventRegister(eventMode mode, eventTiming timing, Tuple template, Callback callback) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void eventRegister(eventMode mode, eventTiming timing, Tuple template, Callback callback) {
+        throw new UnsupportedOperationException("eventRegister not supported in client yet.");
+    }
 
-	@Override
-	public void debug(String prefix) {
-		// TODO Auto-generated method stub
-		
-	}
-    
-    // TO BE COMPLETED
+    public void debug(String prefix) {
+        try {
+            server.debug(prefix);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

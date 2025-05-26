@@ -1,0 +1,13 @@
+package linda.test.MonoServeur;
+
+import linda.Tuple;
+import linda.server.LindaClient;
+
+public class TestClient1 {
+	public static void main(String[] args) {
+        LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+        client.write(new Tuple("Hello", 42));
+        Tuple result = client.read(new Tuple(String.class, Integer.class));
+        System.out.println("Read: " + result);
+    }
+}

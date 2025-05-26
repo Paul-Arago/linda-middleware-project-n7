@@ -1,21 +1,26 @@
-package linda.test;
+package linda.test.CentralizedLinda;
+
+import java.util.Collection;
 
 import linda.Linda;
 import linda.Tuple;
 
-public class TryReadTest {
+public class ReadAllTest1 {
 	/*
-	 * tryRead test
+	 * takeAll test 2
 	 */
 	public static void main(String[] a) {
         final Linda linda = new linda.shm.CentralizedLinda();
         // final Linda linda = new linda.server.LindaClient("rmi://localhost:4000/MonServeur");
                 
         new Thread() {
-            public void run() {
+            public void run() {       	
             	Tuple motif = new Tuple(Integer.class, Integer.class);
-                Tuple res = linda.tryRead(motif);
-                System.out.println("(2) Resultat:" + res);
+            	Collection<Tuple> res = linda.readAll(motif);
+            	System.out.println("Résultats : ");
+            	for(Tuple t : res) {
+            		System.out.println(t);
+            	}
                 linda.debug("(2)");
                 
                 try {
@@ -24,8 +29,11 @@ public class TryReadTest {
                     e.printStackTrace();
                 }
                 
-                Tuple res2 = linda.tryRead(motif);
-                System.out.println("(2) Resultat:" + res2);
+                res = linda.readAll(motif);
+            	System.out.println("Résultats : ");
+            	for(Tuple t : res) {
+            		System.out.println(t);
+            	}
                 linda.debug("(2)");
             }
         }.start();
@@ -37,7 +45,7 @@ public class TryReadTest {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
+            	
                 Tuple t1 = new Tuple(4, 5);
                 System.out.println("(1) write: " + t1);
                 linda.write(t1);
@@ -59,7 +67,7 @@ public class TryReadTest {
                 linda.write(t5);
                 
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(6000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -67,5 +75,6 @@ public class TryReadTest {
                 linda.debug("(1)");
             }
         }.start();
-	}
+                
+    }
 }

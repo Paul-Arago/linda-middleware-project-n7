@@ -1,4 +1,4 @@
-package linda.test;
+package linda.test.CentralizedLinda;
 
 import linda.Callback;
 import linda.Linda;
@@ -6,7 +6,7 @@ import linda.Tuple;
 import linda.Linda.eventMode;
 import linda.Linda.eventTiming;
 
-public class BasicTestCallbackReadFuture {
+public class BasicTestCallbackTakeFuture {
 	private static Linda linda;
     private static Tuple cbmotif;
     
@@ -28,9 +28,10 @@ public class BasicTestCallbackReadFuture {
         Tuple t4 = new Tuple(5, "bar");
         System.out.println("(2) write: " + t4);
         linda.write(t4);
+        linda.debug("(2)");
 
         cbmotif = new Tuple(Integer.class, String.class);
-        linda.eventRegister(eventMode.READ, eventTiming.FUTURE, cbmotif, new MyCallback());
+        linda.eventRegister(eventMode.TAKE, eventTiming.FUTURE, cbmotif, new MyCallback());
 
         Tuple t1 = new Tuple(4, 5);
         System.out.println("(2) write: " + t1);
@@ -44,12 +45,12 @@ public class BasicTestCallbackReadFuture {
         Tuple t3 = new Tuple(4, "foo");
         System.out.println("(2) write: " + t3);
         linda.write(t3);
-        
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
 
+        linda.debug("(2)");
+        
+        Tuple t5 = new Tuple("oe", 15);
+        System.out.println("(2) write: " + t5);
+        linda.write(t5);
         linda.debug("(2)");
 
     }
