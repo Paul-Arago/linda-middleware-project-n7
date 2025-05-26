@@ -26,9 +26,8 @@ public class TestClient5 {
             	Collection<Tuple> res = client.takeAll(new Tuple(String.class, Integer.class));
             	System.out.println("Expected : [ Hello 42 ], [World 89]");
             	System.out.println("Res : ");
-            	for(Tuple t : res) {
+            	for(Tuple t : res)
             		System.out.println(t);
-            	}
             	Collection<Tuple> res2 = client.readAll(new Tuple(String.class, Integer.class));
             	System.out.println("Expected size for String, Integer : 0\nSize of TupleSpace for String,Integer : " + res2.size());
             	Collection<Tuple> res3 = client.readAll(new Tuple(Integer.class, Integer.class));
