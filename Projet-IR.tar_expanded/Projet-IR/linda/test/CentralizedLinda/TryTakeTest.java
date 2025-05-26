@@ -1,4 +1,4 @@
-package linda.test;
+package linda.test.CentralizedLinda;
 
 import java.util.Collection;
 

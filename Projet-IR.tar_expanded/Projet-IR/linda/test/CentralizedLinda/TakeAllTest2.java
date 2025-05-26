@@ -1,11 +1,11 @@
-package linda.test;
+package linda.test.CentralizedLinda;
 
 import java.util.Collection;
 
 import linda.Linda;
 import linda.Tuple;
 
-public class ReadAllTest2 {
+public class TakeAllTest2 {
 	/*
 	 * takeAll test 2
 	 */
@@ -14,15 +14,22 @@ public class ReadAllTest2 {
         // final Linda linda = new linda.server.LindaClient("rmi://localhost:4000/MonServeur");
                 
         new Thread() {
-            public void run() {  
-            	try {
-                    Thread.sleep(2000);
+            public void run() {       	
+            	Tuple motif = new Tuple(Integer.class, Integer.class);
+            	Collection<Tuple> res = linda.takeAll(motif);
+            	System.out.println("Résultats : ");
+            	for(Tuple t : res) {
+            		System.out.println(t);
+            	}
+                linda.debug("(2)");
+                
+                try {
+                    Thread.sleep(4000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            	
-            	Tuple motif = new Tuple(Integer.class, Integer.class);
-            	Collection<Tuple> res = linda.readAll(motif);
+                
+                res = linda.takeAll(motif);
             	System.out.println("Résultats : ");
             	for(Tuple t : res) {
             		System.out.println(t);
@@ -33,6 +40,12 @@ public class ReadAllTest2 {
         
         new Thread() {
             public void run() {
+            	try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            	
                 Tuple t1 = new Tuple(4, 5);
                 System.out.println("(1) write: " + t1);
                 linda.write(t1);
@@ -54,7 +67,7 @@ public class ReadAllTest2 {
                 linda.write(t5);
                 
                 try {
-                    Thread.sleep(4000);
+                    Thread.sleep(6000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

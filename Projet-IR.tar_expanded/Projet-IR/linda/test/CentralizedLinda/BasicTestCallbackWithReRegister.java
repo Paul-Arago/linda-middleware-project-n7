@@ -1,18 +1,19 @@
-package linda.test;
 
-import linda.Callback;
-import linda.Linda;
-import linda.Tuple;
+package linda.test.CentralizedLinda;
+
+import linda.*;
 import linda.Linda.eventMode;
 import linda.Linda.eventTiming;
 
-public class BasicTestCallbackTakeImmediate {
-	private static Linda linda;
+public class BasicTestCallbackWithReRegister {
+
+    private static Linda linda;
     private static Tuple cbmotif;
     
     private static class MyCallback implements Callback {
         public void call(Tuple t) {
             System.out.println("CB got "+t);
+            linda.eventRegister(eventMode.TAKE, eventTiming.IMMEDIATE, cbmotif, this);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -24,11 +25,6 @@ public class BasicTestCallbackTakeImmediate {
     public static void main(String[] a) {
         linda = new linda.shm.CentralizedLinda();
         // linda = new linda.server.LindaClient("//localhost:4000/MonServeur");
-        
-        Tuple t4 = new Tuple(5, "bar");
-        System.out.println("(2) write: " + t4);
-        linda.write(t4);
-        linda.debug("(2)");
 
         cbmotif = new Tuple(Integer.class, String.class);
         linda.eventRegister(eventMode.TAKE, eventTiming.IMMEDIATE, cbmotif, new MyCallback());
@@ -45,13 +41,14 @@ public class BasicTestCallbackTakeImmediate {
         Tuple t3 = new Tuple(4, "foo");
         System.out.println("(2) write: " + t3);
         linda.write(t3);
-
-        linda.debug("(2)");
         
-        Tuple t5 = new Tuple("oe", 15);
-        System.out.println("(2) write: " + t5);
-        linda.write(t5);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+
         linda.debug("(2)");
 
     }
+
 }
