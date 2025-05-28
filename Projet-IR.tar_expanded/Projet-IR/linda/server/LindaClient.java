@@ -6,7 +6,10 @@ import java.util.Collection;
 
 import linda.Callback;
 import linda.Linda;
+import linda.RemoteLinda;
 import linda.Tuple;
+import linda.RemoteCallback;
+import linda.CallbackProxy;
 
 /** Client part of a client/server implementation of Linda.
  * It implements the Linda interface and propagates everything to the server it is connected to.
@@ -92,7 +95,15 @@ public class LindaClient implements Linda {
     }
 
     public void eventRegister(eventMode mode, eventTiming timing, Tuple template, Callback callback) {
-        throw new UnsupportedOperationException("eventRegister not supported in client yet.");
+    	try {
+            RemoteCallback cbProxy = new CallbackProxy(callback);
+            // Convertir les enums vers ceux attendus par RemoteLinda
+            RemoteLinda.eventMode rMode = RemoteLinda.eventMode.valueOf(mode.name());
+            RemoteLinda.eventTiming rTiming = RemoteLinda.eventTiming.valueOf(timing.name());
+            server.eventRegister(rMode, rTiming, template, cbProxy);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void debug(String prefix) {
