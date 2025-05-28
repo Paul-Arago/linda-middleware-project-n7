@@ -3,6 +3,8 @@ package linda.server;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import linda.RemoteLinda;
+
 public class ServerMain {
 	public static void main(String[] args) {
         try {
