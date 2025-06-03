@@ -5,11 +5,11 @@ import java.util.Collection;
 import linda.Tuple;
 import linda.server.LindaClient;
 
-public class TestClient5 {
+public class TestTakeAll {
 	public static void main(String[] args) {
 		new Thread() {
             public void run() {
-            	LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+            	LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
             	client.write(new Tuple("Hello", 42));
             	client.write(new Tuple(32, 42));
             	client.write(new Tuple("World", 89));
@@ -22,7 +22,7 @@ public class TestClient5 {
             		Thread.sleep(2000);
             	} catch(InterruptedException e) {
             	}
-            	LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+            	LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
             	Collection<Tuple> res = client.takeAll(new Tuple(String.class, Integer.class));
             	System.out.println("Expected : [ Hello 42 ], [World 89]");
             	System.out.println("Res : ");

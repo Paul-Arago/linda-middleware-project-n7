@@ -11,7 +11,7 @@ public class TestStress {
     public static void main(String[] args) {
         // Writer thread
         new Thread(() -> {
-            LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+            LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
             for (int i = 0; i < NUM_TUPLES; i++) {
                 client.write(new Tuple("stress", i));
             }
@@ -20,7 +20,7 @@ public class TestStress {
 
         // Reader thread
         new Thread(() -> {
-            LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+            LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
             int taken = 0;
             for (int i = 0; i < NUM_TUPLES; i++) {
                 Tuple t = client.take(new Tuple("stress", Integer.class));

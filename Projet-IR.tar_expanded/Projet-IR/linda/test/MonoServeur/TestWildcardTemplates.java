@@ -5,7 +5,7 @@ import linda.server.LindaClient;
 
 public class TestWildcardTemplates {
     public static void main(String[] args) {
-        LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+        LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
         client.write(new Tuple(123, "bar"));
         client.write(new Tuple("baz", 3.14));
         client.write(new Tuple("foo", 42));

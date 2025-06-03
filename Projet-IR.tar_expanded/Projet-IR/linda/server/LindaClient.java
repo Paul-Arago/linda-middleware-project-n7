@@ -1,5 +1,6 @@
 package linda.server;
 
+import java.net.URI;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Collection;
@@ -19,12 +20,11 @@ public class LindaClient implements Linda {
     private RemoteLinda server;
 
     public LindaClient(String serverURI) {
-        try {
-            // Extraction du nom (ex: "//localhost:4000/LindaServer")
-            String[] parts = serverURI.replace("//", "").split("[:/]");
-            String host = parts[0];
-            int port = Integer.parseInt(parts[1]);
-            String name = parts[2];
+    	try {
+            URI uri = new URI(serverURI);
+            String host = uri.getHost();
+            int port = uri.getPort();
+            String name = uri.getPath().substring(1);
             Registry registry = LocateRegistry.getRegistry(host, port);
             this.server = (RemoteLinda) registry.lookup(name);
         } catch (Exception e) {

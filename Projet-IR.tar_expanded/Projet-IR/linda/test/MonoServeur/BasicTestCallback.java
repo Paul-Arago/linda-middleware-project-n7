@@ -1,11 +1,11 @@
 
-package linda.test.CentralizedLinda;
+package linda.test.MonoServeur;
 
 import linda.*;
 import linda.Linda.eventMode;
 import linda.Linda.eventTiming;
 
-public class BasicTestCallbackWithReRegister {
+public class BasicTestCallback {
 
     private static Linda linda;
     private static Tuple cbmotif;
@@ -23,8 +23,8 @@ public class BasicTestCallbackWithReRegister {
     }
 
     public static void main(String[] a) {
-        linda = new linda.shm.CentralizedLinda();
-        // linda = new linda.server.LindaClient("//localhost:4000/MonServeur");
+        //linda = new linda.shm.CentralizedLinda();
+        linda = new linda.server.LindaClient("//localhost:4000/LindaServer");
 
         cbmotif = new Tuple(Integer.class, String.class);
         linda.eventRegister(eventMode.TAKE, eventTiming.IMMEDIATE, cbmotif, new MyCallback());
@@ -41,11 +41,6 @@ public class BasicTestCallbackWithReRegister {
         Tuple t3 = new Tuple(4, "foo");
         System.out.println("(2) write: " + t3);
         linda.write(t3);
-        
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
 
         linda.debug("(2)");
 

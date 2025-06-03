@@ -23,7 +23,7 @@ public class TestImmediateTake {
 
     public static void main(String[] args) {
         // Connexion au serveur
-        linda = new linda.server.LindaClient("//localhost:4000/LindaServer");
+        linda = new linda.server.LindaClient("rmi://localhost:4000/LindaServer");
 
         Tuple t1 = new Tuple(42, "foo");
         System.out.println("(1) write: " + t1);

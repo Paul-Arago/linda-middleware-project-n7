@@ -5,11 +5,11 @@ import linda.server.LindaClient;
 
 public class TryTakeTestClient {
     public static void main(String[] args) {
-        LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+        LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
 
         new Thread() {
             public void run() {
-                LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+                LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
                 Tuple motif = new Tuple(Integer.class, Integer.class);
                 Tuple result = client.tryTake(motif);
                 System.out.println("(2) Resultat:" + result);
@@ -34,7 +34,7 @@ public class TryTakeTestClient {
                     e.printStackTrace();
                 }
 
-                LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+                LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
                 Tuple t1 = new Tuple(4, 5);
                 System.out.println("(1) write: " + t1);
                 client.write(t1);

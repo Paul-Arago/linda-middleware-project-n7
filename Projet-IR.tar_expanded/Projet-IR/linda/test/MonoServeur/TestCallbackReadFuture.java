@@ -17,14 +17,14 @@ public class TestCallbackReadFuture {
     }
 
     public static void main(String[] args) {
-        linda = new linda.server.LindaClient("//localhost:4000/LindaServer");
+        linda = new linda.server.LindaClient("rmi://localhost:4000/LindaServer");
 
         Tuple t4 = new Tuple(5, "bar");
         linda.write(t4);
 
         cbmotif = new Tuple(Integer.class, String.class);
         linda.eventRegister(Linda.eventMode.READ, Linda.eventTiming.FUTURE, cbmotif, new MyCallback());
-
+        try { Thread.sleep(2000); } catch (InterruptedException e) {}
         linda.write(new Tuple(4, 5));
     }
 }
