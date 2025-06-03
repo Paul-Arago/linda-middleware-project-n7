@@ -1,5 +1,5 @@
 
-package linda.test.CentralizedLinda;
+package linda.test.MonoServeur;
 
 import linda.*;
 import linda.Linda.eventMode;
@@ -18,8 +18,8 @@ public class BasicTestAsyncCallback {
     }
 
     public static void main(String[] a) {
-        Linda linda = new linda.shm.CentralizedLinda();
-        // Linda linda = new linda.server.LindaClient("rmi://localhost:4000/LindaServer");
+        //Linda linda = new linda.shm.CentralizedLinda();
+        Linda linda = new linda.server.LindaClient("rmi://localhost:4000/LindaServer");
 
         Tuple motif = new Tuple(Integer.class, String.class);
         linda.eventRegister(eventMode.TAKE, eventTiming.IMMEDIATE, motif, new AsynchronousCallback(new MyCallback()));

@@ -11,7 +11,7 @@ public class TestTakeMultipleBlock {
         for (int i = 0; i < NUM_TAKERS; i++) {
             final int id = i;
             new Thread(() -> {
-                LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+                LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
                 System.out.println("Taker " + id + ": Calling take...");
                 Tuple t = client.take(new Tuple("token"));
                 System.out.println("Taker " + id + ": Got tuple: " + t);
@@ -20,7 +20,7 @@ public class TestTakeMultipleBlock {
 
         // Writer thread
         new Thread(() -> {
-            LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+            LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
             try { Thread.sleep(2000); } catch (InterruptedException e) {}
             System.out.println("Writer: Writing one tuple...");
             client.write(new Tuple("token"));

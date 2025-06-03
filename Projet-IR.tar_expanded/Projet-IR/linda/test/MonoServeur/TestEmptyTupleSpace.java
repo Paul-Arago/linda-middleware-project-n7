@@ -5,7 +5,7 @@ import linda.server.LindaClient;
 
 public class TestEmptyTupleSpace {
     public static void main(String[] args) {
-        LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+        LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
 
         System.out.println("Testing read on empty tuple space (should block)...");
         new Thread(() -> {

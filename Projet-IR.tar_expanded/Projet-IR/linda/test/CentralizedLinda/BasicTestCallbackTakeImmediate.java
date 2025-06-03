@@ -23,7 +23,6 @@ public class BasicTestCallbackTakeImmediate {
 
     public static void main(String[] a) {
         linda = new linda.shm.CentralizedLinda();
-        // linda = new linda.server.LindaClient("//localhost:4000/MonServeur");
         
         Tuple t4 = new Tuple(5, "bar");
         System.out.println("(2) write: " + t4);

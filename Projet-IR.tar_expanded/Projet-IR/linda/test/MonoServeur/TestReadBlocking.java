@@ -7,7 +7,7 @@ public class TestReadBlocking {
     public static void main(String[] args) {
         new Thread() {
             public void run() {
-                LindaClient client = new LindaClient("//localhost:4000/LindaServer");
+                LindaClient client = new LindaClient("rmi://localhost:4000/LindaServer");
                 Tuple pattern = new Tuple(String.class, Integer.class);
                 System.out.println("Thread 1: Calling read, will block until a matching tuple is available...");
                 Tuple result = client.read(pattern);

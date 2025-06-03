@@ -11,8 +11,7 @@ public class TryTakeTest {
 	 */
 	public static void main(String[] a) {
         final Linda linda = new linda.shm.CentralizedLinda();
-        // final Linda linda = new linda.server.LindaClient("rmi://localhost:4000/MonServeur");
-                
+
         new Thread() {
             public void run() {
             	Tuple motif = new Tuple(Integer.class, Integer.class);
